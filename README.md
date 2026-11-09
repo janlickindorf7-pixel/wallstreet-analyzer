@@ -1,77 +1,58 @@
-📈 WallStreet Analyzer
+# 📈 WallStreet Analyzer
 
-WallStreet Analyzer to aplikacja do analizy rynku akcji, stworzona w języku Python z wykorzystaniem biblioteki Streamlit.
+**WallStreet Analyzer** to aplikacja do analizy rynku akcji, stworzona w języku **Python** z wykorzystaniem biblioteki **Streamlit**.
 
 Projekt umożliwia analizowanie wyników wybranych spółek giełdowych, porównywanie ich zachowania na rynku oraz ocenę trendów za pomocą wskaźników analizy technicznej.
 
 Aplikacja prezentuje dane w formie interaktywnych wykresów i czytelnych zestawień, ułatwiając obserwację zmian cen oraz aktywności rynkowej.
 
+---
 
-🚀 Funkcjonalności
+## 🚀 Funkcjonalności
 
-1. Przegląd rynku (Market Overview)
+### 1. Przegląd rynku (Market Overview)
 
-Analiza 10 wybranych spółek giełdowych.
+- Analiza 10 wybranych spółek giełdowych.
+- Porównanie zmian cen akcji.
+- Wizualizacja znormalizowanych wyników spółek.
+- Analiza zmienności stóp zwrotu.
+- Porównanie średniego dziennego wolumenu obrotu.
+- Wybór okresu analizy: **3 miesiące, 6 miesięcy lub 1 rok**.
 
-Porównanie zmian cen akcji.
+### 2. Szczegółowa analiza spółki (Stock Details)
 
-Wizualizacja znormalizowanych wyników spółek.
+- Wybór spółki do indywidualnej analizy.
+- Wykres cen zamknięcia.
+- Średnie kroczące **SMA 20 i SMA 50**.
+- Wskaźnik **RSI (Relative Strength Index)**.
+- Wskaźnik **MACD (Moving Average Convergence Divergence)**.
+- Analiza dziennych stóp zwrotu.
+- Kluczowe wskaźniki efektywności (KPI):
+  - Ostatnia cena zamknięcia.
+  - Zmiana ceny w wybranym okresie.
+  - Dzienna zmienność.
+  - Średni dzienny wolumen obrotu.
 
-Analiza zmienności stóp zwrotu.
+### 3. Interaktywne wykresy
 
-Porównanie średniego dziennego wolumenu obrotu.
+- Wizualizacja danych z wykorzystaniem **Plotly**.
+- Możliwość zmiany analizowanego okresu.
+- Czytelne wykresy w ciemnym motywie.
 
-Wybór okresu analizy: 3 miesiące, 6 miesięcy lub 1 rok.
+---
 
-2. Szczegółowa analiza spółki (Stock Details)
+## 🛠️ Wykorzystane technologie
 
-Wybór spółki do indywidualnej analizy.
+| Technologia | Zastosowanie |
+|---|---|
+| **Python** | Główny język programowania |
+| **Pandas** | Przetwarzanie i analiza danych |
+| **Streamlit** | Budowa interfejsu aplikacji |
+| **Plotly** | Tworzenie interaktywnych wykresów |
+| **NumPy** | Operacje numeryczne |
+| **Git i GitHub** | Kontrola wersji i przechowywanie kodu |
 
-Wykres cen zamknięcia.
-
-Średnie kroczące SMA 20 i SMA 50.
-
-Wskaźnik RSI (Relative Strength Index).
-
-Wskaźnik MACD (Moving Average Convergence Divergence).
-
-Analiza dziennych stóp zwrotu.
-
-Kluczowe wskaźniki efektywności (KPI):
-
-Ostatnia cena zamknięcia.
-
-Zmiana ceny w wybranym okresie.
-
-Dzienna zmienność.
-
-Średni dzienny wolumen obrotu.
-
-3. Interaktywne wykresy
-
-Wizualizacja danych z wykorzystaniem Plotly.
-
-Możliwość zmiany analizowanego okresu.
-
-Czytelne wykresy w ciemnym motywie.
-
-
-🛠️ Wykorzystane technologie
-
-Projekt został zrealizowany z wykorzystaniem następujących narzędzi i bibliotek:
-
-Python – główny język programowania.
-
-Pandas – przetwarzanie, analiza i organizacja danych.
-
-Streamlit – budowa interaktywnego interfejsu aplikacji.
-
-Plotly – tworzenie interaktywnych wykresów.
-
-NumPy – operacje numeryczne i obliczenia.
-
-Git i GitHub – kontrola wersji oraz przechowywanie kodu źródłowego.
-
+---
 
 ## 💻 Instalacja i uruchomienie
 
@@ -101,7 +82,6 @@ streamlit run app.py
 
 Aplikacja zostanie uruchomiona lokalnie i będzie dostępna w przeglądarce pod adresem:
 
-```text
-http://localhost:8501
-```
-UWAGA: Te instrukcje zakładają, że Python i pip są już zainstalowane.
+**http://localhost:8501**
+
+> **Uwaga:** Powyższe instrukcje zakładają, że Python i pip są już zainstalowane.
