@@ -10,6 +10,7 @@ Aplikacja prezentuje dane w formie interaktywnych wykresów i czytelnych zestawi
 
 ## 🚀 Funkcjonalności
 
+
 ### 1. Przegląd rynku (Market Overview)
 
 - Analiza 10 wybranych spółek giełdowych.
@@ -85,3 +86,7 @@ Aplikacja zostanie uruchomiona lokalnie i będzie dostępna w przeglądarce pod 
 **http://localhost:8501**
 
 > **Uwaga:** Powyższe instrukcje zakładają, że Python i pip są już zainstalowane.
+
+🚀 **Live Demo:** [Launch WallStreet Analyzer](https://wallstreet-analyzer-brdyxp7xtphtwiphpya5ju.streamlit.app) <<--
+Aplikacja jest dostępna online — nie wymaga lokalnej instalacji ani konfiguracji środowiska Python.
+
