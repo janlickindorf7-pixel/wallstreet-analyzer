@@ -88,5 +88,5 @@ Aplikacja zostanie uruchomiona lokalnie i będzie dostępna w przeglądarce pod 
 > **Uwaga:** Powyższe instrukcje zakładają, że Python i pip są już zainstalowane.
 
 🚀 **Live Demo:** [Launch WallStreet Analyzer](https://wallstreet-analyzer-brdyxp7xtphtwiphpya5ju.streamlit.app) <<--
-Aplikacja jest dostępna online — nie wymaga lokalnej instalacji ani konfiguracji środowiska Python.
+Aplikacja jest dostępna online - nie wymaga lokalnej instalacji ani konfiguracji środowiska Python.
 
