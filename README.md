@@ -1,92 +1,107 @@
-# 📈 WallStreet Analyzer
+# Stock Pipeline
 
-**WallStreet Analyzer** to aplikacja do analizy rynku akcji, stworzona w języku **Python** z wykorzystaniem biblioteki **Streamlit**.
+A small data pipeline that downloads the S&P 500 company list, picks the 10 companies with the largest market capitalization, fetches their historical prices from Yahoo Finance and saves them to CSV.
 
-Projekt umożliwia analizowanie wyników wybranych spółek giełdowych, porównywanie ich zachowania na rynku oraz ocenę trendów za pomocą wskaźników analizy technicznej.
+The project is split into a reusable Python package (`extract → transform → load`) and thin scripts that run it.
 
-Aplikacja prezentuje dane w formie interaktywnych wykresów i czytelnych zestawień, ułatwiając obserwację zmian cen oraz aktywności rynkowej.
+## How it works
 
----
-
-## 🚀 Funkcjonalności
-
-
-### 1. Przegląd rynku (Market Overview)
-
-- Analiza 10 wybranych spółek giełdowych.
-- Porównanie zmian cen akcji.
-- Wizualizacja znormalizowanych wyników spółek.
-- Analiza zmienności stóp zwrotu.
-- Porównanie średniego dziennego wolumenu obrotu.
-- Wybór okresu analizy: **3 miesiące, 6 miesięcy lub 1 rok**.
-
-### 2. Szczegółowa analiza spółki (Stock Details)
-
-- Wybór spółki do indywidualnej analizy.
-- Wykres cen zamknięcia.
-- Średnie kroczące **SMA 20 i SMA 50**.
-- Wskaźnik **RSI (Relative Strength Index)**.
-- Wskaźnik **MACD (Moving Average Convergence Divergence)**.
-- Analiza dziennych stóp zwrotu.
-- Kluczowe wskaźniki efektywności (KPI):
-  - Ostatnia cena zamknięcia.
-  - Zmiana ceny w wybranym okresie.
-  - Dzienna zmienność.
-  - Średni dzienny wolumen obrotu.
-
-### 3. Interaktywne wykresy
-
-- Wizualizacja danych z wykorzystaniem **Plotly**.
-- Możliwość zmiany analizowanego okresu.
-- Czytelne wykresy w ciemnym motywie.
-
----
-
-## 🛠️ Wykorzystane technologie
-
-| Technologia | Zastosowanie |
-|---|---|
-| **Python** | Główny język programowania |
-| **Pandas** | Przetwarzanie i analiza danych |
-| **Streamlit** | Budowa interfejsu aplikacji |
-| **Plotly** | Tworzenie interaktywnych wykresów |
-| **NumPy** | Operacje numeryczne |
-| **Git i GitHub** | Kontrola wersji i przechowywanie kodu |
-
----
-
-## 💻 Instalacja i uruchomienie
-
-### 1. Sklonowanie repozytorium
-
-```bash
-git clone https://github.com/janlickindorf7-pixel/wallstreet-analyzer.git
+```
+Wikipedia (S&P 500 list)
+        ↓  fetch_sp500_tickers()
+   ~500 tickers
+        ↓  fetch_market_caps()
+   ticker | market_cap
+        ↓  select_top_n()          (pure logic, no network)
+   top 10 companies
+        ↓  fetch_prices()
+   price history (Open, High, Low, Close, Volume)
+        ↓  save_stock_data()
+   dane/top10_stocks_data.csv
 ```
 
-### 2. Przejście do folderu projektu
+## Project structure
 
-```bash
-cd wallstreet-analyzer
+```
+.
+├── pyproject.toml
+├── README.md
+├── scripts/
+│   └── run_pipeline.py        # entry point: runs the whole pipeline
+├── src/
+│   └── stock_pipeline/
+│       ├── client.py          # extract: Wikipedia + Yahoo Finance
+│       ├── transform.py       # transform: select top N by market cap
+│       ├── load.py            # load: save / read CSV
+│       ├── config.py          # paths and settings (.env support)
+│       └── logger.py          # logging setup (console + app.log)
+├── tests/
+│   └── test_transform.py
+└── dane/                      # generated data (not tracked by Git)
 ```
 
-### 3. Instalacja wymaganych bibliotek
+## Requirements
+
+- Python 3.11+
+- Internet connection (Wikipedia and Yahoo Finance)
+
+## Installation
 
 ```bash
-pip install streamlit pandas plotly numpy
+git clone <your-repo-url>
+cd Stock_market_analyzer
+pip install -e ".[dev]"
 ```
 
-### 4. Uruchomienie aplikacji
+This installs the package in editable mode together with the development tools (pytest, ruff).
+
+## Configuration (optional)
+
+Create a `.env` file in the project root:
+
+```
+DEFAULT_TICKER=AAPL
+```
+
+The `.env` file is not tracked by Git.
+
+## Usage
+
+Run the full pipeline:
 
 ```bash
-streamlit run app.py
+python scripts/run_pipeline.py
 ```
 
-Aplikacja zostanie uruchomiona lokalnie i będzie dostępna w przeglądarce pod adresem:
+The result is saved to `dane/top10_stocks_data.csv`. Fetching market caps for all ~500 companies takes a few minutes, and Yahoo Finance may rate-limit requests.
 
-**http://localhost:8501**
+Read the saved data back in Python:
 
-> **Uwaga:** Powyższe instrukcje zakładają, że Python i pip są już zainstalowane.
+```python
+from stock_pipeline.load import load_stock_data
 
-🚀 **Live Demo:** [Launch WallStreet Analyzer](https://wallstreet-analyzer-brdyxp7xtphtwiphpya5ju.streamlit.app) <<--
-Aplikacja jest dostępna online - nie wymaga lokalnej instalacji ani konfiguracji środowiska Python.
+df = load_stock_data()
+print(df.head())
+```
+
+## Tests and code quality
+
+```bash
+pytest
+ruff check .
+```
+
+## Roadmap
+
+- [ ] Retry with backoff and timeouts for API calls
+- [ ] Validation of partially missing tickers in downloaded prices
+- [ ] Technical indicators (SMA, RSI, MACD) as part of the package, with tests
+- [ ] Streamlit dashboard reading the pipeline output
+- [ ] Docker image for the pipeline
+- [ ] Scheduling and orchestration (Airflow / Dagster)
+- [ ] Loading data into a database / warehouse and modeling it with dbt
+
+## Data source
+
+Company list: Wikipedia. Prices and market capitalization: Yahoo Finance via the `yfinance` library. The data is for educational purposes only and is not financial advice.
 
