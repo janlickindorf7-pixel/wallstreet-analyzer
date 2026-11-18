@@ -1,19 +1,12 @@
 import pandas as pd
-from pathlib import Path 
 
-from stock_pipeline.config import DATA_DIR
-from stock_pipeline.logger import setup_logger
 
-logger = setup_logger(__name__)
+def compute_sma(prices: pd.Series, window: int = 20) -> pd.Series:
+    """Prosta średnia krocząca. Pierwsze window-1 wartości to NaN."""
+    if window < 1:
+        raise ValueError("window musi być >= 1")
+    return prices.rolling(window=window).mean()
 
-def save_stock_data(clean_df_new: pd.DataFrame, filename: str = "top10_stocks_data.csv") -> Path:
-
-    DATA_DIR.mkdir(parents=True, exist_ok=True)
-    file_path = DATA_DIR / filename 
-
-    logger.info(f"Zapisuje {len(clean_df_new)} do pliku CSV")
-
-    clean_df_new.to_csv(file_path)
-
-    logger.info("Zapis zakonczony")
-    return file_path
+def daily_returns(prices: pd.Series) -> pd.Series: 
+    """Dzienny zwrot jako ułamek (0.01 = 1%). Pierwsza wartość to NaN."""
+    return prices.pct_change()
