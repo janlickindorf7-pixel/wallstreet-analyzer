@@ -1,43 +1,36 @@
-# Środowisko wirtualne i menedżery pakietów
+# Środowiska wirtualne
 .venv/
 venv/
 ENV/
-uv.lock # (opcjonalnie, niektórzy commitują, inni ignorują - przy uv zazwyczaj warto commitować, ale zostawiamy .venv)
 
-# Python cache
+# Python cache i budowanie
 __pycache__/
 *.py[cod]
 *$py.class
-*.so
-.Python
 build/
-develop-eggs/
 dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-share/python-wheels/
 *.egg-info/
-.installed.cfg
 *.egg
-MANIFEST
 
-# Lintery i testy
+# Narzędzia
 .ruff_cache/
 .pytest_cache/
 .mypy_cache/
+.ipynb_checkpoints/
 
-# Konfiguracja edytora
+# Edytory i system
 .vscode/
 .idea/
 *.swp
-*.swo
+Thumbs.db
+.DS_Store
 
-# Dane środowiskowe
+# Sekrety i konfiguracja lokalna
 .env
+.env.*
+!.env.example
+
+# Dane i logi (generowane przez pipeline)
+dane/
+logs/
+*.log
