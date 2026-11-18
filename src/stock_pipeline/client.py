@@ -37,7 +37,7 @@ def fetch_market_caps(tickers: list[str]) -> pd.DataFrame:
     return df 
 
 
-def fetch_prices(tickers: list[str], period: str = "1y") -> pd.DataFrame: 
+def fetch_prices(tickers: list[str], period: str = "2y") -> pd.DataFrame: 
     logger.info(f"Pobieram notowania {len(tickers)} spolek, okres: {period}")
 
     df = yf.download(tickers, period=period, auto_adjust=False, progress=False)
