@@ -28,3 +28,23 @@ def compute_rsi(prices: pd.Series, window: int = 14) -> pd.Series:
     rsi = 100 - (100 / (1 + rs))
 
     return rsi
+
+
+def compute_macd(
+    prices: pd.Series, fast: int = 12, slow: int = 26, signal: int = 9
+) -> pd.DataFrame:
+    """MACD (domyślnie 12, 26, 9).
+
+    Zwraca kolumny: macd, signal, histogram. Bez NaN na początku serii,
+    ale przez pierwsze ~slow dni wartości są mało wiarygodne.
+    """
+    ema_fast = prices.ewm(span=fast, adjust=False).mean()
+    ema_slow = prices.ewm(span=slow, adjust=False).mean()
+    macd_line = ema_fast - ema_slow
+    signal_line = macd_line.ewm(span=signal, adjust=False).mean()
+    histogram = macd_line - signal_line
+
+    return pd.DataFrame(
+        {"macd": macd_line, "signal": signal_line, "histogram": histogram},
+        index=prices.index,
+    )
