@@ -1,11 +1,14 @@
 import pandas as pd
 import pytest
 
+
 from stock_pipeline.indicators import (
     compute_macd,
     compute_rsi,
     compute_sma,
     daily_returns,
+    build_indicators 
+
 )
 
 
@@ -114,3 +117,39 @@ def test_macd_reczne_obliczenie():
     assert wynik["macd"].tolist() == pytest.approx([0.0, 1.0])
     assert wynik["signal"].tolist() == pytest.approx([0.0, 0.5])
     assert wynik["histogram"].tolist() == pytest.approx([0.0, 0.5])
+
+
+
+@pytest.fixture
+def ramka_wejsciowa():
+    idx = pd.date_range("2026-01-01", periods=60)
+    cols = pd.MultiIndex.from_product([["Close", "Volume"], ["AAA", "BBB"]])
+    return pd.DataFrame(1.0, index=idx, columns=cols)
+
+def test_build_indicators_ksztalt(ramka_wejsciowa): 
+    wynik = build_indicators(ramka_wejsciowa)
+    assert len(wynik) == 60 * 2 
+    assert set(wynik["ticker"]) == {"AAA", "BBB"}
+
+def test_build_indicators_kolumny(ramka_wejsciowa):
+    wynik = build_indicators(ramka_wejsciowa)
+    oczekiwane = {
+        "date", "ticker", "close", "volume", "daily_returns",
+        "sma_20", "sma_50", "rsi_14", "macd", "signal", "histogram",
+    }
+    assert set(wynik.columns) == oczekiwane
+    assert len(wynik.columns) == len(oczekiwane)
+
+def test_build_indicators_zgodne_z_klockiem(ramka_wejsciowa):
+    wynik = build_indicators(ramka_wejsciowa)
+    sma_z_tabeli = wynik[wynik["ticker"] == "AAA"].set_index("date")["sma_20"]
+    sma_bezposrednio = compute_sma(ramka_wejsciowa["Close"]["AAA"], 20)
+    pd.testing.assert_series_equal(
+        sma_z_tabeli, sma_bezposrednio, check_names=False, check_freq=False
+    )
+
+def test_build_indicators_brak_close_rzuca_blad():
+    cols = pd.MultiIndex.from_product([["Volume"], ["AAA"]])
+    df = pd.DataFrame(1.0, index=pd.date_range("2026-01-01", periods=5), columns=cols)
+    with pytest.raises(ValueError):
+        build_indicators(df)

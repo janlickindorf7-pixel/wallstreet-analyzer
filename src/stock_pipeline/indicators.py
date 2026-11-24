@@ -1,4 +1,7 @@
 import pandas as pd
+from stock_pipeline.logger import setup_logger
+
+logger = setup_logger(__name__)
 
 
 def compute_sma(prices: pd.Series, window: int = 20) -> pd.Series:
@@ -48,3 +51,45 @@ def compute_macd(
         {"macd": macd_line, "signal": signal_line, "histogram": histogram},
         index=prices.index,
     )
+
+
+def build_indicators(prices: pd.DataFrame) -> pd.DataFrame: 
+    for level in ("Close", "Volume"):
+        if level not in prices.columns.get_level_values(0):
+            raise ValueError(f"Brak '{level} w danych wejsciowych")
+
+    close = prices['Close']
+    volume = prices['Volume']
+
+    frames = []
+
+    for ticker in close.columns: 
+        c = close[ticker]
+        frame = pd.DataFrame({
+            "close": c,
+            "volume": volume[ticker],
+            "daily_returns": daily_returns(c),
+            "sma_20": compute_sma(c, 20),
+            "sma_50": compute_sma(c, 50),
+            "rsi_14": compute_rsi(c),
+        }
+        )
+        macd = compute_macd(c)
+
+        frame = frame.join(macd)
+        frame["ticker"] = ticker
+        frames.append(frame)
+
+    result = pd.concat(frames)
+    result.index.name = "date"
+    result = result.reset_index()
+
+    first = ["date", "ticker"]
+    result = result[first + [c for c in result.columns if c not in first]]
+
+    logger.info(f"Policzono wskazniki dla {len(frames)} spolek, wierszy: {len(result)}")
+    return result
+
+
+
+

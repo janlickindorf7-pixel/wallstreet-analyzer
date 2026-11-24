@@ -48,23 +48,3 @@ def fetch_prices(tickers: list[str], period: str = "2y") -> pd.DataFrame:
     logger.info(f"Pobrano notowania, wymiar ramki: {df.shape}")
     return df
 
-
-def compute_macd(
-    prices: pd.Series, fast: int = 12, slow: int = 26, signal: int = 9
-) -> pd.DataFrame:
-
-    if min(fast, slow, signal) < 1:
-        raise ValueError("fast, slow i signal muszą być >= 1")
-    if fast >= slow:
-        raise ValueError("fast musi być mniejsze niż slow")
-
-    ema_fast = prices.ewm(span=fast, adjust=False).mean()
-    ema_slow = prices.ewm(span=slow, adjust=False).mean()
-    macd_line = ema_fast - ema_slow
-    signal_line = macd_line.ewm(span=signal, adjust=False).mean()
-    histogram = macd_line - signal_line
-
-    return pd.DataFrame(
-        {"macd": macd_line, "signal": signal_line, "histogram": histogram},
-        index=prices.index,
-    )
