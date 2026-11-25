@@ -47,4 +47,3 @@ def fetch_prices(tickers: list[str], period: str = "2y") -> pd.DataFrame:
 
     logger.info(f"Pobrano notowania, wymiar ramki: {df.shape}")
     return df
-
