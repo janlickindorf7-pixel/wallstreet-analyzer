@@ -1,4 +1,5 @@
 import pandas as pd
+
 from stock_pipeline.logger import setup_logger
 
 logger = setup_logger(__name__)
@@ -53,26 +54,27 @@ def compute_macd(
     )
 
 
-def build_indicators(prices: pd.DataFrame) -> pd.DataFrame: 
+def build_indicators(prices: pd.DataFrame) -> pd.DataFrame:
     for level in ("Close", "Volume"):
         if level not in prices.columns.get_level_values(0):
             raise ValueError(f"Brak '{level} w danych wejsciowych")
 
-    close = prices['Close']
-    volume = prices['Volume']
+    close = prices["Close"]
+    volume = prices["Volume"]
 
     frames = []
 
-    for ticker in close.columns: 
+    for ticker in close.columns:
         c = close[ticker]
-        frame = pd.DataFrame({
-            "close": c,
-            "volume": volume[ticker],
-            "daily_returns": daily_returns(c),
-            "sma_20": compute_sma(c, 20),
-            "sma_50": compute_sma(c, 50),
-            "rsi_14": compute_rsi(c),
-        }
+        frame = pd.DataFrame(
+            {
+                "close": c,
+                "volume": volume[ticker],
+                "daily_returns": daily_returns(c),
+                "sma_20": compute_sma(c, 20),
+                "sma_50": compute_sma(c, 50),
+                "rsi_14": compute_rsi(c),
+            }
         )
         macd = compute_macd(c)
 
@@ -89,7 +91,3 @@ def build_indicators(prices: pd.DataFrame) -> pd.DataFrame:
 
     logger.info(f"Policzono wskazniki dla {len(frames)} spolek, wierszy: {len(result)}")
     return result
-
-
-
-
