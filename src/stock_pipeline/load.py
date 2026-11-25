@@ -1,4 +1,5 @@
 from pathlib import Path
+
 import pandas as pd
 
 from stock_pipeline.config import DATA_DIR
@@ -8,20 +9,22 @@ logger = setup_logger(__name__)
 
 
 def save_indicators(df: pd.DataFrame, filename: str = "indicators.csv") -> Path:
-    output_dir = Path(DATA_DIR)
-    output_dir.mkdir(parents=True, exist_ok=True)
-    output_path = output_dir / filename 
+    """Zapisuje tabelę wskaźników (format long) do CSV w dane/."""
 
-    df.to_csv(output_path, index=False)
-    logger.info(f"Zapisano {len(df)} wierszy do {output_path}")
-    return output_path 
+    DATA_DIR.mkdir(parents=True, exist_ok=True)
+    file_path = DATA_DIR / filename
+
+    df.to_csv(file_path, index=False)
+    logger.info(f"Zapisano {len(df)} wierszy do {file_path}")
+    return file_path
+
 
 def load_indicators(filename: str = "indicators.csv") -> pd.DataFrame:
-    path = Path(DATA_DIR) / filename
-    if not path.exists():
-        raise FileNotFoundError(f"Brak pliku: {Path}") 
+    """Wczytuje tabelę wskaźników z dane/ (kolumna date jako daty)."""
+    file_path = DATA_DIR / filename
+    if not file_path.exists():
+        raise FileNotFoundError(f"Brak pliku: {file_path}")
 
-    df = pd.read_csv(path, parse_dates=["date"])
-    logger.info(f"Wczytano {len(df)} wierszy z {path}")
-    return df 
-
+    df = pd.read_csv(file_path, parse_dates=["date"])
+    logger.info(f"Wczytano {len(df)} wierszy z {file_path}")
+    return df
